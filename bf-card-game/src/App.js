@@ -1,9 +1,10 @@
+import Card from "./components/Card/Card";
 import "./styles/index.scss"
 
 function App() {
   return (
     <div>
-        <p>TESTto</p>
+        <Card/>
     </div>
   );
 }
