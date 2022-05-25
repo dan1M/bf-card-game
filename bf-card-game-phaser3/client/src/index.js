@@ -5,7 +5,7 @@ const config = {
     type: Phaser.AUTO,
     parent: "phaser-example",
     width: 1280,
-    height: 900,
+    height: 780,
     scene: [
         Game
     ]
