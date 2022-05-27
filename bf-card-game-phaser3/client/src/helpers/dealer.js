@@ -1,10 +1,7 @@
 import Card from './card';
 
 export default class Dealer {
-            /* for (let i = 0; i < 20; i++) {
-                let playerCard = new Card(this);
-                playerCard.render(150 + (i * 50), 650, 'edea');
-            } */
+        
     constructor(scene) {
         this.dealCards = () => {
             let playerSprite;
@@ -16,12 +13,12 @@ export default class Dealer {
                 playerSprite = 'ydra';
                 opponentSprite = 'edea';
             };
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 20; i++) {
                 let playerCard = new Card(scene);
-                playerCard.render(475 + (i * 100), 650, playerSprite);
+                playerCard.render(80 + (i * 80), innerHeight*0.8, playerSprite);
 
                 let opponentCard = new Card(scene);
-                scene.opponentCards.push(opponentCard.render(475 + (i * 100), 125, opponentSprite));
+                scene.opponentCards.push(opponentCard.render(80 + (i * 80), innerHeight*0.2, opponentSprite));
             }
         }
     }

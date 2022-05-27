@@ -1,6 +1,7 @@
 import Card from '../helpers/card';
 import Zone from '../helpers/zone';
 import Dealer from '../helpers/dealer';
+import TurnCounter from '../helpers/turn-counter';
 
 import io from 'socket.io-client';
 
@@ -26,7 +27,7 @@ export default class Game extends Phaser.Scene {
 
         this.dealer = new Dealer(this);           
         this.zone = new Zone(this);
-        this.dropZone = this.zone.renderZone();
+        this.dropZone = this.zone.renderZone(innerWidth/2, innerHeight/2, 1000, 260);
         this.outline = this.zone.renderOutline(this.dropZone);
 
         // Multiplayer handle
@@ -55,9 +56,18 @@ export default class Game extends Phaser.Scene {
             }
         })
 
+        this.socket.on('turnAdd', () => {
+            self.turnCounter.add();
+        })
+
+        this.socket.on('turnSub', () => {
+            self.turnCounter.substract();
+        })
+
+
 
         // 'Deal' button
-        this.dealText = this.add.text(75, 350, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
+        this.dealText = this.add.text(75, innerHeight/2, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
         
         this.dealText.on('pointerdown', function () {
             self.socket.emit("dealCards");    // signal to server to emit dealcards       
@@ -71,6 +81,9 @@ export default class Game extends Phaser.Scene {
             self.dealText.setColor('#00ffff');
         })
 
+        // 'Turn counter' object
+
+        this.turnCounter = new TurnCounter(this);   
 
         
         // Input events

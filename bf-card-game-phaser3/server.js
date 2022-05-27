@@ -25,6 +25,13 @@ io.on('connection', function (socket) {
         io.emit('cardPlayed', gameObject, isPlayerA);
     });
 
+    socket.on('turnAdd', () => {
+        io.emit('turnAdd');
+    })
+    socket.on('turnSub', () => {
+        io.emit('turnSub');
+    })
+
     socket.on('disconnect', function () {
         console.log('A user disconnected: ' + socket.id);
         players = players.filter(player => player !== socket.id);
