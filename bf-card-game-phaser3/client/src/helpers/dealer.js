@@ -3,15 +3,23 @@ import Card from './card';
 export default class Dealer {
         
     constructor(scene) {
+        let deck = [];
+
+        for (let el in scene.textures.list){
+            if(!(el == '__DEFAULT' || el == '__MISSING' || el == '__WHITE')){
+                deck.push(el);
+            }
+        }
+
         this.dealCards = () => {
             let playerSprite;
             let opponentSprite;
             if (scene.isPlayerA) {
-                playerSprite = 'edea';
+                playerSprite = 'vargas';
                 opponentSprite = 'ydra';
             } else {
                 playerSprite = 'ydra';
-                opponentSprite = 'edea';
+                opponentSprite = 'vargas';
             };
             for (let i = 0; i < 20; i++) {
                 let playerCard = new Card(scene);

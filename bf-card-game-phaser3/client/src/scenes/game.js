@@ -17,6 +17,23 @@ export default class Game extends Phaser.Scene {
         this.load.image('yan-yuan', 'src/assets/yan-yuan.png');
         this.load.image('ydra', 'src/assets/ydra.png');
         this.load.image('edea', 'src/assets/edea.png');
+        this.load.image('vargas', 'src/assets/vargas.png');
+        this.load.image('alice', 'src/assets/alice.png');
+        this.load.image('atro', 'src/assets/atro.png');
+        this.load.image('bayley', 'src/assets/bayley.png');
+        this.load.image('cayena', 'src/assets/cayena.png');
+        this.load.image('elimo', 'src/assets/elimo.png');
+        this.load.image('eze', 'src/assets/eze.png');
+        this.load.image('fennia', 'src/assets/fennia.png');        
+        this.load.image('lance', 'src/assets/lance.png');    
+        this.load.image('lava', 'src/assets/lava.png');  
+        this.load.image('lico', 'src/assets/lico.png'); 
+        this.load.image('lilith', 'src/assets/lilith.png');
+        this.load.image('loch', 'src/assets/loch.png');
+        this.load.image('magress', 'src/assets/magress.png');
+        this.load.image('selena', 'src/assets/selena.png');
+        this.load.image('serin', 'src/assets/serin.png');
+        this.load.image('vanila', 'src/assets/vanila.png');
     }
 
     create() {
@@ -25,6 +42,7 @@ export default class Game extends Phaser.Scene {
         this.isPlayerA = false;
         this.opponentCards = [];
 
+        console.log(Object.keys(this.textures.list))
         this.dealer = new Dealer(this);           
         this.zone = new Zone(this);
         this.dropZone = this.zone.renderZone(innerWidth/2, innerHeight/2, 1000, 260);
@@ -67,7 +85,7 @@ export default class Game extends Phaser.Scene {
 
 
         // 'Deal' button
-        this.dealText = this.add.text(75, innerHeight/2, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive();
+        this.dealText = this.add.text(75, innerHeight/2, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive({cursor: 'pointer'});
         
         this.dealText.on('pointerdown', function () {
             self.socket.emit("dealCards");    // signal to server to emit dealcards       
