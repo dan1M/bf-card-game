@@ -3,31 +3,41 @@ import Card from './card';
 export default class Dealer {
         
     constructor(scene) {
-        let deck = [];
+        this.deck = []; // toutes les cartes dispo
+        this.playerDeck = []; // les 20 cartes du joueur 1
+        this.opponentDeck = []; // les 20 cartes du joueur 2
+        this.playerHand = []; // les (6) cartes de la main joueur 1
+        this.opponentHand = []; // les (6) cartes de la main joueur 2
 
         for (let el in scene.textures.list){
             if(!(el == '__DEFAULT' || el == '__MISSING' || el == '__WHITE')){
-                deck.push(el);
+                this.deck.push(el);
             }
         }
 
-        this.dealCards = () => {
-            let playerSprite;
-            let opponentSprite;
-            if (scene.isPlayerA) {
-                playerSprite = 'vargas';
-                opponentSprite = 'ydra';
-            } else {
-                playerSprite = 'ydra';
-                opponentSprite = 'vargas';
+
+        
+        this.dealCards = (socketId) => {
+            if (socketId === scene.socket.id) {
+                for (let i = 0; i < this.playerDeck.length; i++) {
+                    
+                    let playerCard = new Card(scene);
+                    playerCard.render(200 + (i * 30), innerHeight, this.playerDeck[i]);
+                }
+    
+                console.log('cartes joueur : ', this.playerDeck);
+                console.log('cartes opponent : ', this.opponentDeck);
+            }else {
+
             };
-            for (let i = 0; i < 20; i++) {
+            /* 
+            for (let i = 0; i < this.playerDeck.length; i++) {
                 let playerCard = new Card(scene);
-                playerCard.render(80 + (i * 80), innerHeight*0.8, playerSprite);
+                playerCard.render(200 + (i * 30), innerHeight, playerSprites[i]);
 
                 let opponentCard = new Card(scene);
-                scene.opponentCards.push(opponentCard.render(80 + (i * 80), innerHeight*0.2, opponentSprite));
-            }
+                scene.opponentCards.push(opponentCard.render(200 + (i * 30), innerHeight*0.2, opponentSprites[i]));
+            } */
         }
     }
 }

@@ -6,23 +6,42 @@ const io = require('socket.io')(http, {
         methods: ["GET", "POST"]
     }
 });
-let players = [];
+
+
+const shuffle = require('shuffle-array');
+let players = {};
+
 
 io.on('connection', function (socket) {
     console.log('A user connected: ' + socket.id);
 
-    players.push(socket.id);
-
-    if (players.length === 1) {
-        io.emit('isPlayerA');
+    players[socket.id] = {
+        deck: [],
+        hand: [],
+        isPlayerA: false
     };
 
-    socket.on('dealCards', function () {
-        io.emit('dealCards');
+    if ( Object.keys(players).length < 2 ){
+        players[socket.id].isPlayerA = true;
+    }
+
+    socket.on('dealDeck', (socketId, cardsAvailable) => {
+        players[socketId].deck = shuffle(cardsAvailable).slice(0, 20);        
+        
+        console.log(players);
+        if (Object.keys(players).length < 2) return;
     });
 
-    socket.on('cardPlayed', function (gameObject, isPlayerA) {
-        io.emit('cardPlayed', gameObject, isPlayerA);
+    socket.on('dealCards', function (socketId) {       
+
+        console.log(players);
+
+        io.emit('dealCards', Object.keys(players)[0], players[Object.keys(players)[0]].deck);
+        io.emit('dealCards', Object.keys(players)[1], players[Object.keys(players)[1]].deck);
+    });
+
+    socket.on('cardPlayed', function (gameObject, socketId) {
+        io.emit('cardPlayed', gameObject, socketId);
     });
 
     socket.on('turnAdd', () => {
@@ -34,7 +53,7 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         console.log('A user disconnected: ' + socket.id);
-        players = players.filter(player => player !== socket.id);
+        delete players[socket.id];
     });
 });
 

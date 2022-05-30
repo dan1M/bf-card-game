@@ -40,32 +40,78 @@ export default class Game extends Phaser.Scene {
         let self = this;
 
         this.isPlayerA = false;
-        this.opponentCards = [];
 
-        console.log(Object.keys(this.textures.list))
-        this.dealer = new Dealer(this);           
+        this.dealer = new Dealer(this);
+
         this.zone = new Zone(this);
-        this.dropZone = this.zone.renderZone(innerWidth/2, innerHeight/2, 1000, 260);
-        this.outline = this.zone.renderOutline(this.dropZone);
+
+        // Player 1 cards
+        this.dropZoneP1c1 = this.zone.renderZone(2.5*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c1);
+
+        this.dropZoneP1c2 = this.zone.renderZone(3.8*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c2);
+        
+        this.dropZoneP1c3 = this.zone.renderZone(5.1*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c3);
+
+        this.dropZoneP1c4 = this.zone.renderZone(6.4*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c4);
+
+        this.dropZoneP1c5 = this.zone.renderZone(7.7*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c5);
+
+        this.dropZoneP1c6 = this.zone.renderZone(9*innerWidth/12, innerHeight/1.7, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP1c6);
+
+        // Player 2 cards
+        this.dropZoneP2c1 = this.zone.renderZone(2.5*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c1);
+
+        this.dropZoneP2c2 = this.zone.renderZone(3.8*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c2);
+        
+        this.dropZoneP2c3 = this.zone.renderZone(5.1*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c3);
+
+        this.dropZoneP2c4 = this.zone.renderZone(6.4*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c4);
+
+        this.dropZoneP2c5 = this.zone.renderZone(7.7*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c5);
+
+        this.dropZoneP2c6 = this.zone.renderZone(9*innerWidth/12, innerHeight/5, 150, 220);
+        this.outline = this.zone.renderOutline(this.dropZoneP2c6);
 
         // Multiplayer handle
         this.socket = io('http://localhost:3000');
 
         this.socket.on('connect', function () {
-        	console.log('Connected!');
+        	console.log('Connected! '+self.socket.id);
+            self.socket.emit('dealDeck', self.socket.id, self.dealer.deck);
         });
 
-        this.socket.on('isPlayerA', function () {
-        	self.isPlayerA = true;
-        })
-
-        this.socket.on('dealCards', function () {
-            self.dealer.dealCards();
+        this.socket.on('dealCards', (socketId, cards) => {
+            if(socketId === self.socket.id){
+                console.log('cartes recues: ', cards)
+                for (let i in cards){
+                    self.dealer.playerDeck.push(cards[i]);
+                }
+            }else{
+                for (let i in cards){
+                    self.dealer.opponentDeck.push(cards[i]);
+                }
+            }
+            self.dealer.dealCards(socketId);
+            
+            
             self.dealText.disableInteractive();
         })
 
-        this.socket.on('cardPlayed', function (gameObject, isPlayerA) {
-            if (isPlayerA !== self.isPlayerA) {
+        
+
+        this.socket.on('cardPlayed', function (gameObject, socketId) {
+            if (socketId !== self.socket.id) {
                 let sprite = gameObject.textureKey;
                 self.opponentCards.shift().destroy();
                 self.dropZone.data.values.cards++;
@@ -88,7 +134,7 @@ export default class Game extends Phaser.Scene {
         this.dealText = this.add.text(75, innerHeight/2, ['DEAL CARDS']).setFontSize(18).setFontFamily('Trebuchet MS').setColor('#00ffff').setInteractive({cursor: 'pointer'});
         
         this.dealText.on('pointerdown', function () {
-            self.socket.emit("dealCards");    // signal to server to emit dealcards       
+            self.socket.emit("dealCards", self.socket.id, self.dealer.deck);    // signal to server to emit dealcards       
         })
 
         this.dealText.on('pointerover', function () {
@@ -111,12 +157,10 @@ export default class Game extends Phaser.Scene {
         })
 
         this.input.on('dragstart', function (pointer, gameObject) {
-            gameObject.setTint(0xff69b4);
-            self.children.bringToTop(gameObject);
+            //self.children.bringToTop(gameObject);
         })
 
         this.input.on('dragend', function (pointer, gameObject, dropped) {
-            gameObject.setTint();
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;
@@ -125,7 +169,7 @@ export default class Game extends Phaser.Scene {
 
         this.input.on('drop', function (pointer, gameObject, dropZone) {
             dropZone.data.values.cards++;
-            gameObject.x = (dropZone.x - 350) + (dropZone.data.values.cards * 50);
+            gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
             gameObject.disableInteractive();
             self.socket.emit('cardPlayed', gameObject, self.isPlayerA);
