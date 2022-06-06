@@ -88,7 +88,7 @@ export default class Game extends Phaser.Scene {
         
 
         // Multiplayer handle
-        this.socket = io('https://bf-card-game.herokuapp.com');
+        this.socket = io('https://bf-card-game.herokuapp.com/');
 
         this.socket.on('connect', function () {
         	console.log('Connected! '+self.socket.id);

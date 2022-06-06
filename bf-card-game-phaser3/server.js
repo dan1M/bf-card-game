@@ -1,16 +1,18 @@
 const server = require('express')();
 const http = require('http').createServer(server);
+const cors = require('cors');
 
 const path = require('path')
 const serveStatic = require('serve-static');
 
 const io = require('socket.io')(http, {
     cors: {
-        origin: 'https://bf-card-game.herokuapp.com',
+        origin: 'https://bf-card-game.herokuapp.com/',
         methods: ["GET", "POST"]
     }
 });
 
+server.use(cors());
 server.use(serveStatic(__dirname + '/client/dist'));
 
 const shuffle = require('shuffle-array');
