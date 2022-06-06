@@ -88,7 +88,7 @@ export default class Game extends Phaser.Scene {
         
 
         // Multiplayer handle
-        this.socket = io();
+        this.socket = io.connect();
 
         this.socket.on('connect', function () {
         	console.log('Connected! '+self.socket.id);
