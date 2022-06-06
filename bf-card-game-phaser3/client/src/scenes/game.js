@@ -34,6 +34,8 @@ export default class Game extends Phaser.Scene {
         this.load.image('selena', 'src/assets/selena.png');
         this.load.image('serin', 'src/assets/serin.png');
         this.load.image('vanila', 'src/assets/vanila.png');
+        
+        // ajouter les nouvelles cartes
     }
 
     create() {
@@ -86,7 +88,7 @@ export default class Game extends Phaser.Scene {
         
 
         // Multiplayer handle
-        this.socket = io('http://localhost:3000');
+        this.socket = io('https://bf-card-game.herokuapp.com');
 
         this.socket.on('connect', function () {
         	console.log('Connected! '+self.socket.id);

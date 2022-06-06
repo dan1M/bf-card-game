@@ -1,12 +1,17 @@
 const server = require('express')();
 const http = require('http').createServer(server);
+
+const path = require('path')
+const serveStatic = require('serve-static');
+
 const io = require('socket.io')(http, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: 'https://bf-card-game.herokuapp.com',
         methods: ["GET", "POST"]
     }
 });
 
+server.use(serveStatic(__dirname + '/client/dist'));
 
 const shuffle = require('shuffle-array');
 let players = {};
@@ -68,6 +73,9 @@ io.on('connection', function (socket) {
     });
 });
 
-http.listen(3000, function () {
+
+const port = process.env.PORT || 3000;
+
+http.listen(port, function () {
     console.log('Server started!');
 });
