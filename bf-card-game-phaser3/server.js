@@ -57,11 +57,6 @@ io.on('connection', function (socket) {
     });
 
 
-
-
-
-
-
     socket.on('turnAdd', () => {
         io.emit('turnAdd');
     })
@@ -78,6 +73,6 @@ io.on('connection', function (socket) {
 
 const port = process.env.PORT || 3000;
 
-http.listen(port, function () {
+http.listen(port, 'https://bf-card-game.herokuapp.com/', function () {
     console.log('Server started!');
 });
