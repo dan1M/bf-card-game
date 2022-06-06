@@ -7,7 +7,7 @@ const serveStatic = require('serve-static');
 
 const io = require('socket.io')(http, {
     cors: {
-        origin: 'https://bf-card-game.herokuapp.com/',
+        origin: "https://bf-card-game.herokuapp.com/",
         methods: ["GET", "POST"]
     }
 });
