@@ -24,9 +24,6 @@ export default class Dealer {
                     let playerCard = new Card(scene);
                     playerCard.render(200 + (i * 30), innerHeight, this.playerDeck[i]);
                 }
-    
-                console.log('cartes joueur : ', this.playerDeck);
-                console.log('cartes opponent : ', this.opponentDeck);
             }else {
 
             };

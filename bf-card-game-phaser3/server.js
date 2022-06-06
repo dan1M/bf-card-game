@@ -32,17 +32,28 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) return;
     });
 
-    socket.on('dealCards', function (socketId) {       
-
+    socket.on('dealCards', function (socketId) {
         console.log(players);
 
         io.emit('dealCards', Object.keys(players)[0], players[Object.keys(players)[0]].deck);
         io.emit('dealCards', Object.keys(players)[1], players[Object.keys(players)[1]].deck);
     });
 
-    socket.on('cardPlayed', function (gameObject, socketId) {
-        io.emit('cardPlayed', gameObject, socketId);
+    socket.on('cardPlayed', function (card, socketId) {
+
+        players[socketId].hand.push(card);
+        
+        console.log(players);
+
+        io.emit('cardPlayed', Object.keys(players)[0], players[Object.keys(players)[0]].hand);
+        io.emit('cardPlayed', Object.keys(players)[1], players[Object.keys(players)[1]].hand);
     });
+
+
+
+
+
+
 
     socket.on('turnAdd', () => {
         io.emit('turnAdd');

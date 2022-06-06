@@ -83,6 +83,8 @@ export default class Game extends Phaser.Scene {
         this.dropZoneP2c6 = this.zone.renderZone(9*innerWidth/12, innerHeight/5, 150, 220);
         this.outline = this.zone.renderOutline(this.dropZoneP2c6);
 
+        
+
         // Multiplayer handle
         this.socket = io('http://localhost:3000');
 
@@ -93,7 +95,7 @@ export default class Game extends Phaser.Scene {
 
         this.socket.on('dealCards', (socketId, cards) => {
             if(socketId === self.socket.id){
-                console.log('cartes recues: ', cards)
+                //console.log('cartes recues: ', cards)
                 for (let i in cards){
                     self.dealer.playerDeck.push(cards[i]);
                 }
@@ -103,21 +105,36 @@ export default class Game extends Phaser.Scene {
                 }
             }
             self.dealer.dealCards(socketId);
-            
-            
             self.dealText.disableInteractive();
         })
 
         
 
-        this.socket.on('cardPlayed', function (gameObject, socketId) {
-            if (socketId !== self.socket.id) {
-                let sprite = gameObject.textureKey;
-                self.opponentCards.shift().destroy();
-                self.dropZone.data.values.cards++;
-                let card = new Card(self);
-                card.render(((self.dropZone.x - 350) + (self.dropZone.data.values.cards * 50)), (self.dropZone.y), sprite).disableInteractive();
+        this.socket.on('cardPlayed', function (socketId, cards) {
+            if(socketId === self.socket.id){
+                console.log('main recue : ', cards)
+                for (let i in cards){
+                    self.dealer.playerHand.push(cards[i]);
+                }
+            }else{
+                console.log('main recue adv : ', cards)
+                for (let i in cards){
+                    self.dealer.opponentHand.push(cards[i]);
+
+                    let card = new Card(self);
+                    console.log("test");
+                    card.render(eval('self.dropZoneP2c'+cards.length+'.x'), eval('self.dropZoneP2c'+cards.length+'.y'), cards[cards.length-1]);
+                    
+                }
             }
+
+            
+            /* if (socketId !== self.socket.id) {
+                let sprite = gameObject.textureKey;
+                //self.opponentCards.shift().destroy();
+                let card = new Card(self);
+                card.render(self.dropZone.x, (self.dropZone.y), sprite).disableInteractive();
+            } */
         })
 
         this.socket.on('turnAdd', () => {
@@ -163,16 +180,16 @@ export default class Game extends Phaser.Scene {
         this.input.on('dragend', function (pointer, gameObject, dropped) {
             if (!dropped) {
                 gameObject.x = gameObject.input.dragStartX;
-                gameObject.y = gameObject.input.dragStartY;
+                gameObject.y = gameObject.input.dragStartY; 
             }
         })
 
         this.input.on('drop', function (pointer, gameObject, dropZone) {
-            dropZone.data.values.cards++;
             gameObject.x = dropZone.x;
             gameObject.y = dropZone.y;
-            gameObject.disableInteractive();
-            self.socket.emit('cardPlayed', gameObject, self.isPlayerA);
+            
+            console.log(gameObject.frame.texture.key)
+            self.socket.emit('cardPlayed', gameObject.frame.texture.key, self.socket.id);
         })
 
     }
