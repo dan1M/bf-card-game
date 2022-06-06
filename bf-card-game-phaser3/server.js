@@ -73,6 +73,6 @@ io.on('connection', function (socket) {
 
 const port = process.env.PORT || 3000;
 
-http.listen(port, 'https://bf-card-game.herokuapp.com/', function () {
+http.listen(port, function () {
     console.log('Server started!');
 });
