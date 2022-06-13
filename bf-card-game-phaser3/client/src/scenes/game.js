@@ -17,7 +17,7 @@ export default class Game extends Phaser.Scene {
       'default',
       'https://ik.imagekit.io/dan1m/default-image.jpg'
     );
-    this.load.image('yan-yuan', 'src/assets/yan-yuan.png');
+    /* this.load.image('yan-yuan', 'src/assets/yan-yuan.png');
     this.load.image('ydra', 'src/assets/ydra.png');
     this.load.image('edea', 'src/assets/edea.png');
     this.load.image('vargas', 'src/assets/vargas.png');
@@ -36,7 +36,7 @@ export default class Game extends Phaser.Scene {
     this.load.image('magress', 'src/assets/magress.png');
     this.load.image('selena', 'src/assets/selena.png');
     this.load.image('serin', 'src/assets/serin.png');
-    this.load.image('vanila', 'src/assets/vanila.png');
+    this.load.image('vanila', 'src/assets/vanila.png'); */
 
     // ajouter les nouvelles cartes
   }
